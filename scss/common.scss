@@ -1,0 +1,60 @@
+@import './mixin.scss';
+
+.flex{
+    @include flex;
+    .col{
+        @include col(0);
+    }
+    @for $i from 1 to 7{
+        .col-#{$i}{
+            @include col($i);
+        }
+    }
+}
+@for $i from 1 to 20{
+    .w#{$i*10}{
+        width:#{$i*10}px;
+    }
+    .h#{$i*10}{
+        height: #{$i*10}px;
+    }
+}
+.btn{
+    @include btn(16);
+}
+
+.clear {
+    clear: both;
+}
+
+.clearfix:before,.clearfix:after{
+    content:"";
+    display:table;
+}
+.clearfix:after{
+    clear:both;
+}
+.clearfix{
+    *zoom:1;
+}
+
+.area {
+    background: #eff4f5;
+    box-sizing: border-box;
+    padding: 10px;
+    width: 100%;
+}
+.form-control{
+    padding: 6px 12px;
+    margin-right: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    color:#555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.075);
+    &:focus{
+        border-color: $blue;
+    }
+}
