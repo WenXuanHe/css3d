@@ -25,7 +25,9 @@ System.register(['node_modules/three/build/three.js'], function (_export, _conte
             // 创建渲染器
             renderer = new WebGLRenderer();
             geometry = new BoxGeometry(1, 1, 1);
-            material = new MeshBasicMaterial({ color: 0xff0000 });
+            material = new MeshBasicMaterial({
+                color: 0xff0000
+            });
             mesh = new Mesh(geometry, material);
             light = new SpotLight(0xffffff);
 

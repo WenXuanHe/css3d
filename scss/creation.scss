@@ -1,0 +1,71 @@
+$translateZ:400px;
+$n:20;
+ @font-face {
+  font-family: 'iconfont';  /* project id 305120 */
+  src: url('//at.alicdn.com/t/font_w8f0n64x2x8t1emi.eot');
+  src: url('//at.alicdn.com/t/font_w8f0n64x2x8t1emi.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_w8f0n64x2x8t1emi.woff') format('woff'),
+  url('//at.alicdn.com/t/font_w8f0n64x2x8t1emi.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_w8f0n64x2x8t1emi.svg#iconfont') format('svg');
+}
+.iconfont{
+    font-family:"iconfont";
+    font-size:20px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@mixin buildRotateAnimation($n){
+    @for $i from 0 to $n+1{
+        #{$i*100/$n}%{
+            transform: rotateY(#{$i*100*3.6/$n}deg);
+        }
+    }
+}
+@mixin childItems($n){
+    @for $i from 0 to $n{
+        &:nth-child(#{$i+1}){
+            background:url('../img/p#{$i+1}.png') no-repeat;
+
+            transform: rotateY(#{$i*100*3.6/$n}deg) translateZ($translateZ);
+        }
+    }
+}
+
+@keyframes rot{
+    @include buildRotateAnimation($n);
+}
+.stage{
+    perspective: 274px;
+    position: relative;
+    width: 1366px;
+    height: 619px;
+    overflow: hidden;
+    background: url('../img/bg.jpg');
+    perspective-origin: 36% 35%;
+    .contain{
+        display: flex;
+        transform-style: preserve-3d;
+        position: absolute;
+        left: 34%;
+        height: 100px;
+        width: 200px;
+        transform: rotateY(108deg);
+        animation:rot 100s linear infinite;
+        div{
+            width: 129px;
+            height: 800px;
+            position: absolute;
+            transform-origin: center;
+            @include childItems($n);
+        }
+    }
+}
+.control-audio{
+    position: absolute;
+    left: 50%;
+    top: 30px;
+    z-index: 1;
+}
