@@ -10,7 +10,7 @@ import {
     Vector3,
     Face3,
     SpotLight
-} from 'node_modules/three/build/three.js';
+} from 'three';
 // 创建场景
 let scene = new Scene();
 //创建相机

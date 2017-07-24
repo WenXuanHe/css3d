@@ -3,32 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <title>Document</title>
+
+    <!-- 双飞翼布局 -->
     <style type="text/css">
         .main {
             background:#ace;
             height:200px;
             float:left;
-            width: 100%;}
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 20%;
+            padding-right: 300px;
+            border-top: 1px solid;
+            border-bottom: 1px solid;
+        }
         .left {
             width: 20%;
             float: left;
             background: #eee;
             height: 200px;
+            box-sizing: border-box;
             margin-left: -100%;
+            border-right: 1px solid;
           }
         .right {
             width: 300px;
             background: #ddd;
             height: 200px;
             float: right;
+            box-sizing: border-box;
             margin-left: -300px;
+            border-left: 1px solid;
         }
     </style>
 </head>
 <body>
-    <div class="main"></div>
-    <div class="left"></div>
-    <div class="right"></div>
+    <div class="main">成功</div>
+    <div class="left">地方地方</div>
+    <div class="right">等丰富的</div>
 
 </body>
 </html>
