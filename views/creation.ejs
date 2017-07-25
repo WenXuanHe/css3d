@@ -32,12 +32,12 @@
     <!-- windows phone 点击无高光 -->
     <meta name="msapplication-tap-highlight" content="no">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="/dist/styles/creation.css">
+    <link rel="stylesheet" type="text/css" href="/dist/styles/create.css">
 </head>
 <body>
     <div class="control-audio">
         <i class="iconfont icon-bofangyinpin" id='control-audio'>&#xe64b;</i>
-        <audio src="./audio/bgm.mp3">
+        <audio src="./src/audio/bgm.mp3">
     </div>
     <div class="stage" id="viewer">
         <div class="contain" id="contain">
@@ -64,9 +64,6 @@
         </div>
     </div>
     <script src="https://cdn.bootcss.com/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="./node_modules/systemjs/dist/system.js"></script>
-    <script>
-        SystemJS.import('./js/creation.js');
-    </script>
+    <script src="./dist/create.js"></script>
 </body>
 </html>

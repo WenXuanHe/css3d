@@ -6,6 +6,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "css-loader": "^0.28.4",
     "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.11.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-sass": "^3.1.0",
@@ -14,6 +15,7 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "systemjs": "^0.20.14",
+    "url-loader": "^0.5.9",
     "webpack": "^1.13.1"
   },
   "scripts": {

@@ -12,29 +12,29 @@ function swallowError(error) {
 }
 
 gulp.task('sass', function () {
-  return gulp.src('./scss/*.scss')
+  return gulp.src('./public/src/scss/*.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(gulp.dest('./css'));
+    .pipe(gulp.dest('./public/dist/css/'));
 });
-gulp.task('es6', function () {
-  return gulp.src(['./js/es6/*.js']) // ES6 源码存放的路径
-    .pipe(babel({
-      presets: ['es2015',"stage-0"],
-      plugins: ["transform-es2015-modules-systemjs"]
-    }))
-    .pipe(sourcemaps.init())
-    //报错不退出
-    .on('error', swallowError)
-    //重命名
-    // .pipe(rename({suffix: '.dist'}))
-    .pipe(gulp.dest('./js/'));
-});
+// gulp.task('es6', function () {
+//   return gulp.src(['./js/es6/*.js']) // ES6 源码存放的路径
+//     .pipe(babel({
+//       presets: ['es2015',"stage-0"],
+//       plugins: ["transform-es2015-modules-systemjs"]
+//     }))
+//     .pipe(sourcemaps.init())
+//     //报错不退出
+//     .on('error', swallowError)
+//     //重命名
+//     // .pipe(rename({suffix: '.dist'}))
+//     .pipe(gulp.dest('./js/'));
+// });
 
 gulp.task('watch', function () {
-  gulp.watch('./scss/*.scss', ['sass']);
-  gulp.watch('./js/es6/*.js', ['es6']);
+  gulp.watch('./public/src/scss/*.scss', ['sass']);
+  // gulp.watch('./js/es6/*.js', ['es6']);
 });
 
 gulp.task('default', function(){
-  gulp.start('sass', 'es6', 'watch');
+  gulp.start('sass', 'watch');
 })

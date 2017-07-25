@@ -1,3 +1,5 @@
+import '../scss/creation.scss';
+
 var viewer = $('#viewer');
 var cube = $('#contain');
 var x1, y1, x2, y2, c_x_deg = 0,

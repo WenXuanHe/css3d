@@ -34,27 +34,20 @@
 /******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _three = __webpack_require__(1);
-	
-	var _threeTrackballcontrols = __webpack_require__(2);
-	
-	var _threeTrackballcontrols2 = _interopRequireDefault(_threeTrackballcontrols);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	// BoxGeometry--长方体
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // BoxGeometry--长方体
 	// CircleGeometry--圆形平面
 	// CylinderGeometry--圆柱体
 	// PlaneGeometry--方形平面
@@ -64,55 +57,143 @@
 	// TorusGeometry--圆环
 	// TubeGeometry--圆管
 	// MeshLambertMaterial 漫反射材质 需要光源
+	
+	
+	var _three = __webpack_require__(27);
+	
+	var _threeTrackballcontrols = __webpack_require__(28);
+	
+	var _threeTrackballcontrols2 = _interopRequireDefault(_threeTrackballcontrols);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
 	var SCREEN_HEIGHT = window.innerHeight;
 	var SCREEN_WIDTH = window.innerWidth;
-	// 创建场景
-	var scene = new _three.Scene();
-	scene.add(new _three.AmbientLight(0xcccccc));
-	var directionalLight = new _three.DirectionalLight(0xcccccc);
-	directionalLight.position.set(-2, 9, 1).normalize(); //设置平行光方向
-	scene.add(directionalLight);
-	var pointlight = new _three.PointLight(0xffffff, 1, 1000);
-	pointlight.position.set(0, 0, 1000); //设置点光源位置
-	scene.add(pointlight);
-	// 相机
-	var camera = new _three.PerspectiveCamera(100, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 1000);
-	camera.position.set(20, 20, 20);
-	camera.lookAt(new _three.Vector3(0, 0, 0));
-	var renderer = new _three.WebGLRenderer();
-	// 定义镜头尺寸
-	renderer.setSize(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-	// 设置默认背景色
-	renderer.setClearColor(0xf0f0f0);
-	document.body.appendChild(renderer.domElement);
-	// 定义物体的形状
-	var geometry = new _three.BoxGeometry(15, 15, 15);
-	// 定义物体的材质
-	var material = new _three.MeshLambertMaterial({
-	    color: 0x7777ff
-	});
-	//定义物体
-	var mesh = new _three.Mesh(geometry, material);
-	// 定义光源
 	
-	scene.add(mesh);
+	var main = function () {
+	    function main() {
+	        _classCallCheck(this, main);
 	
-	// 但我们调用scence.add()的时候，我们要添加的东西讲被添加在(0,0,0)坐标下.这会导致相机和立方体彼此交叉。为了避免这一点，我们只需将相机移出一点
-	camera.position.z = 10;
-	var controls = new _threeTrackballcontrols2.default(camera, renderer.domElement);
-	controls.minDistance = 1;
-	controls.maxDistance = 100000;
-	var render = function render() {
-	    requestAnimationFrame(render);
-	    // mesh.rotation.x += 0.1;
-	    // mesh.rotation.y += 0.1;
-	    controls.update();
-	    renderer.render(scene, camera);
-	};
-	render();
+	        this.scene = null;
+	        this.camera = null;
+	        this.renderer = null;
+	        this.controls = null;
+	        this.ground = null;
+	        this.init();
+	    }
+	
+	    _createClass(main, [{
+	        key: 'init',
+	        value: function init() {
+	            // 创建场景
+	            this.scene = new _three.Scene();
+	            // 创建光线
+	            this.createlight();
+	            // 相机
+	            this.camera = new _three.PerspectiveCamera(100, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 1000);
+	            this.setCamera();
+	            // 渲染器
+	            this.renderer = new _three.WebGLRenderer({
+	                antialias: true //抗锯齿
+	            });
+	            this.setRenderer();
+	            // 添加到body
+	            document.body.appendChild(this.renderer.domElement);
+	            // 创建正方体
+	            this.createRect();
+	            // 创建陆地
+	            this.createGround();
+	            // 设置鼠标控制
+	            this.setControl();
+	            // 持续渲染
+	            this.render();
+	        }
+	    }, {
+	        key: 'setCamera',
+	        value: function setCamera() {
+	            this.camera.position.set(-300, 0, 0);
+	            this.camera.lookAt(new _three.Vector3(0, 0, 0));
+	            // 但我们调用scence.add()的时候，我们要添加的东西讲被添加在(0,0,0)坐标下.这会导致相机和立方体彼此交叉。为了避免这一点，我们只需将相机移出一点
+	            this.camera.position.z = 10;
+	        }
+	    }, {
+	        key: 'setRenderer',
+	        value: function setRenderer() {
+	            // 定义镜头尺寸
+	            this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	            // 设置默认背景色
+	            this.renderer.setClearColor(0xf0f0f0);
+	            // 开启阴影
+	            this.renderer.shadowMap.enabled = true;
+	        }
+	    }, {
+	        key: 'createGround',
+	        value: function createGround() {
+	            this.ground = new _three.Mesh(new _three.CubeGeometry(1000, 1, 1000), new _three.MeshLambertMaterial({
+	                color: 0xff0000
+	            }));
+	            this.ground.position.set(0, -10, 0);
+	            this.ground.receiveShadow = true;
+	
+	            this.scene.add(this.ground);
+	        }
+	    }, {
+	        key: 'createRect',
+	        value: function createRect() {
+	            // 定义物体的形状
+	            var geometry = new _three.BoxGeometry(3, 30, 30); //深，长，宽
+	            // 定义物体的材质
+	            var material = new _three.MeshLambertMaterial({
+	                color: 0x7777ff
+	            });
+	            //定义物体
+	            var mesh = new _three.Mesh(geometry, material);
+	            mesh.position.set(0, 0, 0);
+	            this.scene.add(mesh);
+	        }
+	    }, {
+	        key: 'createlight',
+	        value: function createlight() {
+	            // 设置光源
+	            this.scene.add(new _three.AmbientLight(0xcccccc));
+	            //设置平行光方向
+	            var directionalLight = new _three.DirectionalLight(0xcccccc);
+	            directionalLight.position.set(-2, 9, 1).normalize();
+	            this.scene.add(directionalLight);
+	            var pointlight = new _three.PointLight(0xffffff, 1, 500);
+	            //设置点光源位置
+	            pointlight.position.set(0, 0, 500);
+	            pointlight.castShadow = true;
+	            this.scene.add(pointlight);
+	        }
+	    }, {
+	        key: 'setControl',
+	        value: function setControl() {
+	            this.controls = new _threeTrackballcontrols2.default(this.camera, this.renderer.domElement);
+	            this.controls.minDistance = 1;
+	            this.controls.maxDistance = 100000;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	
+	            requestAnimationFrame(this.render.bind(this));
+	            // this.ground.rotation.y += 0.01;
+	            this.controls.update();
+	            this.renderer.render(this.scene, this.camera);
+	        }
+	    }]);
+	
+	    return main;
+	}();
+	
+	new main();
 
 /***/ }),
-/* 1 */
+
+/***/ 27:
 /***/ (function(module, exports, __webpack_require__) {
 
 	(function (global, factory) {
@@ -44228,7 +44309,8 @@
 
 
 /***/ }),
-/* 2 */
+
+/***/ 28:
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -44241,7 +44323,7 @@
 	 ** @author Jon Lim / http://jonlim.ca
 	 */
 	
-	var THREE = window.THREE || __webpack_require__(3);
+	var THREE = window.THREE || __webpack_require__(29);
 	
 	module.exports = TrackballControls = function ( object, domElement ) {
 	
@@ -44874,7 +44956,8 @@
 
 
 /***/ }),
-/* 3 */
+
+/***/ 29:
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;var self = self || {};// File:src/Three.js
@@ -85448,5 +85531,6 @@
 
 
 /***/ })
-/******/ ]);
+
+/******/ });
 //# sourceMappingURL=simpleByThree.js.map

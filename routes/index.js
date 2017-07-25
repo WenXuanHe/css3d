@@ -3,6 +3,7 @@ var router = require('koa-router')();
 router.get('/', async function (ctx, next) {
   await ctx.render("index", {});
 });
+
 router.get('/three', async function (ctx, next) {
   await ctx.render("three", {});
 });
