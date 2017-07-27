@@ -71,6 +71,14 @@
 	
 	var SCREEN_HEIGHT = window.innerHeight;
 	var SCREEN_WIDTH = window.innerWidth;
+	var Colors = {
+	    red: 0xf25346,
+	    white: 0xd8d0d1,
+	    brown: 0x59332e,
+	    pink: 0xF5986E,
+	    brownDark: 0x23190f,
+	    blue: 0x68c3c0
+	};
 	
 	var main = function () {
 	    function main() {
@@ -81,6 +89,8 @@
 	        this.renderer = null;
 	        this.controls = null;
 	        this.ground = null;
+	        this.airport = null;
+	
 	        this.init();
 	    }
 	
@@ -89,6 +99,8 @@
 	        value: function init() {
 	            // 创建场景
 	            this.scene = new _three.Scene();
+	            // 在场景中添加雾的效果；样式上使用和背景一样的颜色
+	            this.scene.fog = new _three.Fog(0xf7d9aa, 100, 950);
 	            // 创建光线
 	            this.createlight();
 	            // 相机
@@ -96,15 +108,20 @@
 	            this.setCamera();
 	            // 渲染器
 	            this.renderer = new _three.WebGLRenderer({
-	                antialias: true //抗锯齿
+	                antialias: true, //抗锯齿
+	                alpha: true
 	            });
 	            this.setRenderer();
 	            // 添加到body
-	            document.body.appendChild(this.renderer.domElement);
-	            // 创建正方体
-	            this.createRect();
+	            document.getElementById('world').appendChild(this.renderer.domElement);
+	
 	            // 创建陆地
 	            this.createGround();
+	
+	            this.createAirport();
+	
+	            this.createAI();
+	
 	            // 设置鼠标控制
 	            this.setControl();
 	            // 持续渲染
@@ -129,10 +146,144 @@
 	            this.renderer.shadowMap.enabled = true;
 	        }
 	    }, {
+	        key: 'createAI',
+	        value: function createAI() {
+	
+	            // 创建一个空的容器
+	            this.AI = new _three.Object3D();
+	
+	            // 头
+	            var geometry = new _three.SphereGeometry(14, 96, 96);
+	            var material = new _three.MeshBasicMaterial({ color: Colors.pink });
+	            var head = new _three.Mesh(geometry, material);
+	            head.position.set(-100, 100, 0); //前后， 上下，左右
+	            head.castShadow = true;
+	            head.receiveShadow = true;
+	            this.AI.head = head;
+	            this.AI.add(head);
+	
+	            var geomCockpit = new _three.BoxGeometry(10, 10, 10, 1, 1, 1);
+	            var matCockpit = new _three.MeshPhongMaterial({
+	                color: Colors.red,
+	                shading: _three.FlatShading
+	            });
+	            var cockpit = new _three.Mesh(geomCockpit, matCockpit);
+	            cockpit.position.set(-100, 85, 0);
+	            cockpit.castShadow = true;
+	            cockpit.receiveShadow = true;
+	            this.AI.cockpit = cockpit;
+	            this.AI.add(cockpit);
+	
+	            var geomBody = new _three.BoxGeometry(30, 30, 30, 1, 1, 1);
+	            var matBody = new _three.MeshPhongMaterial({
+	                color: Colors.red,
+	                shading: _three.FlatShading
+	            });
+	            var body = new _three.Mesh(geomBody, matBody);
+	            body.position.set(-100, 65, 0);
+	            body.castShadow = true;
+	            body.receiveShadow = true;
+	            this.AI.body = body;
+	            this.AI.add(body);
+	
+	            var geomRightFoot = new _three.BoxGeometry(10, 65, 10, 1, 1, 1);
+	            var matFoot = new _three.MeshPhongMaterial({
+	                color: Colors.red,
+	                shading: _three.FlatShading
+	            });
+	            var footer = new _three.Mesh(geomFoot, matFoot);
+	            footer.position.set(-100, 25, 10);
+	            footer.castShadow = true;
+	            footer.receiveShadow = true;
+	            this.AI.footer = footer;
+	            this.AI.add(footer);
+	
+	            this.scene.add(this.AI);
+	        }
+	    }, {
+	        key: 'createAirport',
+	        value: function createAirport() {
+	            // 创建一个空的容器
+	            this.airport = new _three.Object3D();
+	
+	            var geomCockpit = new _three.BoxGeometry(60, 50, 50, 1, 1, 1);
+	            var matCockpit = new _three.MeshPhongMaterial({
+	                color: Colors.red,
+	                shading: _three.FlatShading
+	            });
+	            var cockpit = new _three.Mesh(geomCockpit, matCockpit);
+	            cockpit.castShadow = true;
+	            cockpit.receiveShadow = true;
+	            this.airport.cockpit = cockpit;
+	            this.airport.add(cockpit);
+	
+	            // 创建引擎
+	            var geomEngine = new _three.BoxGeometry(20, 50, 50, 1, 1, 1);
+	            var matEngine = new _three.MeshPhongMaterial({
+	                color: Colors.white,
+	                shading: _three.FlatShading
+	            });
+	            var engine = new _three.Mesh(geomEngine, matEngine);
+	            engine.position.x = 40;
+	            engine.castShadow = true;
+	            engine.receiveShadow = true;
+	            this.airport.add(engine);
+	
+	            // 创建机尾
+	            var geomTailPlane = new _three.BoxGeometry(15, 20, 5, 1, 1, 1);
+	            var matTailPlane = new _three.MeshPhongMaterial({
+	                color: Colors.red,
+	                shading: _three.FlatShading
+	            });
+	            var tailPlane = new _three.Mesh(geomTailPlane, matTailPlane);
+	            tailPlane.position.set(-35, 25, 0);
+	            tailPlane.castShadow = true;
+	            tailPlane.receiveShadow = true;
+	            this.airport.add(tailPlane);
+	
+	            // 创建机翼
+	            var geomSideWing = new _three.BoxGeometry(40, 8, 150, 1, 1, 1);
+	            var matSideWing = new _three.MeshPhongMaterial({
+	                color: Colors.red,
+	                shading: _three.FlatShading
+	            });
+	            var sideWing = new _three.Mesh(geomSideWing, matSideWing);
+	            sideWing.castShadow = true;
+	            sideWing.receiveShadow = true;
+	            this.airport.add(sideWing);
+	
+	            // 创建螺旋桨
+	            var geomPropeller = new _three.BoxGeometry(20, 10, 10, 1, 1, 1);
+	            var matPropeller = new _three.MeshPhongMaterial({
+	                color: Colors.brown,
+	                shading: _three.FlatShading
+	            });
+	            var propeller = new _three.Mesh(geomPropeller, matPropeller);
+	            propeller.castShadow = true;
+	            propeller.receiveShadow = true;
+	
+	            // 创建螺旋桨的桨叶
+	            var geomBlade = new _three.BoxGeometry(1, 100, 20, 1, 1, 1);
+	            var matBlade = new _three.MeshPhongMaterial({
+	                color: Colors.brownDark,
+	                shading: _three.FlatShading
+	            });
+	
+	            var blade = new _three.Mesh(geomBlade, matBlade);
+	            blade.position.set(8, 0, 0);
+	            blade.castShadow = true;
+	            blade.receiveShadow = true;
+	            propeller.add(blade);
+	            propeller.position.set(50, 0, 0);
+	            this.airport.propeller = propeller;
+	            this.airport.add(propeller);
+	            this.scene.add(this.airport);
+	        }
+	    }, {
 	        key: 'createGround',
 	        value: function createGround() {
 	            this.ground = new _three.Mesh(new _three.CubeGeometry(1000, 1, 1000), new _three.MeshLambertMaterial({
-	                color: 0xff0000
+	                color: Colors.brown
 	            }));
 	            this.ground.position.set(0, -10, 0);
 	            this.ground.receiveShadow = true;
@@ -143,7 +294,7 @@
 	        key: 'createRect',
 	        value: function createRect() {
 	            // 定义物体的形状
-	            var geometry = new _three.BoxGeometry(3, 30, 30); //深，长，宽
+	            var geometry = new _three.BoxGeometry(3, 30, -30); //深，长，宽
 	            // 定义物体的材质
 	            var material = new _three.MeshLambertMaterial({
 	                color: 0x7777ff
@@ -151,6 +302,8 @@
 	            //定义物体
 	            var mesh = new _three.Mesh(geometry, material);
 	            mesh.position.set(0, 0, 0);
+	            mesh.receiveShadow = true;
+	            mesh.castShadow = true;
 	            this.scene.add(mesh);
 	        }
 	    }, {
@@ -181,6 +334,7 @@
 	
 	            requestAnimationFrame(this.render.bind(this));
 	            // this.ground.rotation.y += 0.01;
+	            this.airport.propeller.rotation.x += 0.3;
 	            this.controls.update();
 	            this.renderer.render(this.scene, this.camera);
 	        }
