@@ -61,6 +61,8 @@
 	
 	var _three = __webpack_require__(27);
 	
+	var _three2 = _interopRequireDefault(_three);
+	
 	var _threeTrackballcontrols = __webpack_require__(28);
 	
 	var _threeTrackballcontrols2 = _interopRequireDefault(_threeTrackballcontrols);
@@ -91,6 +93,7 @@
 	        this.ground = null;
 	        this.airport = null;
 	
+	        this.step = 0;
 	        this.init();
 	    }
 	
@@ -101,10 +104,13 @@
 	            this.scene = new _three.Scene();
 	            // 在场景中添加雾的效果；样式上使用和背景一样的颜色
 	            this.scene.fog = new _three.Fog(0xf7d9aa, 100, 950);
+	            // 添加辅助测试工具
+	            var axis = _three2.default.AxisHelper(20);
+	            this.scene.add(axis);
 	            // 创建光线
-	            this.createlight();
-	            // 相机
-	            this.camera = new _three.PerspectiveCamera(100, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 1000);
+	            var lights = this.createlight();
+	            // 相机  视角，宽高比，近距点，远距点
+	            this.camera = new _three.PerspectiveCamera(50, SCREEN_WIDTH / SCREEN_HEIGHT, 0.1, 1000);
 	            this.setCamera();
 	            // 渲染器
 	            this.renderer = new _three.WebGLRenderer({
@@ -122,10 +128,29 @@
 	
 	            this.createAI();
 	
+	            var _setShadow = this.setShadow(this.renderer),
+	                setLightShadow = _setShadow.setLightShadow,
+	                setMashShaow = _setShadow.setMashShaow;
+	
+	            this.setLightShadow = setLightShadow;
+	            this.setMashShaow = setMashShaow;
 	            // 设置鼠标控制
 	            this.setControl();
 	            // 持续渲染
 	            this.render();
+	        }
+	    }, {
+	        key: 'setShadow',
+	        value: function setShadow(renderer, pointlights, mashs) {
+	            renderer.shadowMap.enabled = true;
+	            return {
+	                setLightShadow: function setLightShadow(light) {
+	                    light.castShadow = true;
+	                },
+	                setMashShaow: function setMashShaow(mash) {
+	                    mash.receiveShadow = true;
+	                }
+	            };
 	        }
 	    }, {
 	        key: 'setCamera',
@@ -154,11 +179,11 @@
 	
 	            // 头
 	            var geometry = new _three.SphereGeometry(14, 96, 96);
-	            var material = new _three.MeshBasicMaterial({ color: Colors.pink });
+	            var material = new _three.MeshBasicMaterial({ color: Colors.pink, wireframe: true });
 	            var head = new _three.Mesh(geometry, material);
 	            head.position.set(-100, 100, 0); //前后， 上下，左右
-	            head.castShadow = true;
-	            head.receiveShadow = true;
+	            // head.receiveShadow = true;
+	            this.setMashShaow(head);
 	            this.AI.head = head;
 	            this.AI.add(head);
 	
@@ -169,8 +194,8 @@
 	            });
 	            var cockpit = new _three.Mesh(geomCockpit, matCockpit);
 	            cockpit.position.set(-100, 85, 0);
-	            cockpit.castShadow = true;
-	            cockpit.receiveShadow = true;
+	            // cockpit.receiveShadow = true;
+	            this.setMashShaow(cockpit);
 	            this.AI.cockpit = cockpit;
 	            this.AI.add(cockpit);
 	
@@ -181,8 +206,8 @@
 	            });
 	            var body = new _three.Mesh(geomBody, matBody);
 	            body.position.set(-100, 65, 0);
-	            body.castShadow = true;
-	            body.receiveShadow = true;
+	            // body.receiveShadow = true;
+	            this.setMashShaow(body);
 	            this.AI.body = body;
 	            this.AI.add(body);
 	
@@ -193,8 +218,8 @@
 	            });
 	            var footer = new _three.Mesh(geomFoot, matFoot);
 	            footer.position.set(-100, 25, 10);
-	            footer.castShadow = true;
-	            footer.receiveShadow = true;
+	            // footer.receiveShadow = true;
+	            this.setMashShaow(footer);
 	            this.AI.footer = footer;
 	            this.AI.add(footer);
 	
@@ -212,8 +237,8 @@
 	                shading: _three.FlatShading
 	            });
 	            var cockpit = new _three.Mesh(geomCockpit, matCockpit);
-	            cockpit.castShadow = true;
-	            cockpit.receiveShadow = true;
+	            // cockpit.receiveShadow = true;
+	            this.setMashShaow(cockpit);
 	            this.airport.cockpit = cockpit;
 	            this.airport.add(cockpit);
 	
@@ -225,8 +250,8 @@
 	            });
 	            var engine = new _three.Mesh(geomEngine, matEngine);
 	            engine.position.x = 40;
-	            engine.castShadow = true;
-	            engine.receiveShadow = true;
+	            // engine.receiveShadow = true;
+	            this.setMashShaow(engine);
 	            this.airport.add(engine);
 	
 	            // 创建机尾
@@ -237,8 +262,8 @@
 	            });
 	            var tailPlane = new _three.Mesh(geomTailPlane, matTailPlane);
 	            tailPlane.position.set(-35, 25, 0);
-	            tailPlane.castShadow = true;
-	            tailPlane.receiveShadow = true;
+	            // tailPlane.receiveShadow = true;
+	            this.setMashShaow(tailPlane);
 	            this.airport.add(tailPlane);
 	
 	            // 创建机翼
@@ -248,8 +273,8 @@
 	                shading: _three.FlatShading
 	            });
 	            var sideWing = new _three.Mesh(geomSideWing, matSideWing);
-	            sideWing.castShadow = true;
-	            sideWing.receiveShadow = true;
+	            // sideWing.receiveShadow = true;
+	            this.setMashShaow(sideWing);
 	            this.airport.add(sideWing);
 	
 	            // 创建螺旋桨
@@ -259,9 +284,8 @@
 	                shading: _three.FlatShading
 	            });
 	            var propeller = new _three.Mesh(geomPropeller, matPropeller);
-	            propeller.castShadow = true;
-	            propeller.receiveShadow = true;
-	
+	            // propeller.receiveShadow = true;
+	            this.setMashShaow(propeller);
 	            // 创建螺旋桨的桨叶
 	            var geomBlade = new _three.BoxGeometry(1, 100, 20, 1, 1, 1);
 	            var matBlade = new _three.MeshPhongMaterial({
@@ -271,8 +295,8 @@
 	
 	            var blade = new _three.Mesh(geomBlade, matBlade);
 	            blade.position.set(8, 0, 0);
-	            blade.castShadow = true;
-	            blade.receiveShadow = true;
+	            // blade.receiveShadow = true;
+	            this.setMashShaow(blade);
 	            propeller.add(blade);
 	            propeller.position.set(50, 0, 0);
 	            this.airport.propeller = propeller;
@@ -282,7 +306,9 @@
 	    }, {
 	        key: 'createGround',
 	        value: function createGround() {
-	            this.ground = new _three.Mesh(new _three.CubeGeometry(1000, 1, 1000), new _three.MeshLambertMaterial({
+	            this.ground = new _three.Mesh(
+	            // new CubeGeometry(1000, 1, 1000),
+	            new _three2.default.PlaneGeometry(70, 50, 1, 1), new _three.MeshLambertMaterial({
 	                color: Colors.brown
 	            }));
 	            this.ground.position.set(0, -10, 0);
@@ -303,14 +329,14 @@
 	            var mesh = new _three.Mesh(geometry, material);
 	            mesh.position.set(0, 0, 0);
 	            mesh.receiveShadow = true;
-	            mesh.castShadow = true;
 	            this.scene.add(mesh);
 	        }
 	    }, {
 	        key: 'createlight',
 	        value: function createlight() {
+	            var ambientLight = new _three.AmbientLight(0xcccccc);
 	            // 设置光源
-	            this.scene.add(new _three.AmbientLight(0xcccccc));
+	            this.scene.add(ambientLight);
 	            //设置平行光方向
 	            var directionalLight = new _three.DirectionalLight(0xcccccc);
 	            directionalLight.position.set(-2, 9, 1).normalize();
@@ -318,8 +344,10 @@
 	            var pointlight = new _three.PointLight(0xffffff, 1, 500);
 	            //设置点光源位置
 	            pointlight.position.set(0, 0, 500);
-	            pointlight.castShadow = true;
+	            // pointlight.castShadow = true;
+	            this.setLightShadow(pointlight);
 	            this.scene.add(pointlight);
+	            return [ambientLight, directionalLight, pointlight];
 	        }
 	    }, {
 	        key: 'setControl',
@@ -335,6 +363,9 @@
 	            requestAnimationFrame(this.render.bind(this));
 	            // this.ground.rotation.y += 0.01;
 	            this.airport.propeller.rotation.x += 0.3;
+	            this.step += 0.04;
+	            this.AI.position.x = 20 + 10 * Math.abs(Math.cos(this.step));
+	            this.AI.position.y = 20 + 10 * Math.abs(Math.sin(this.step));
 	            this.controls.update();
 	            this.renderer.render(this.scene, this.camera);
 	        }
