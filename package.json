@@ -19,7 +19,8 @@
     "webpack": "^1.13.1"
   },
   "scripts": {
-    "dev": "webpack --watch"
+    "dev": "webpack --watch",
+    "start": "node app"
   },
   "dependencies": {
     "babel-plugin-transform-es2015-modules-systemjs": "^6.24.1",

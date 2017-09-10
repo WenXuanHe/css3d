@@ -11,6 +11,4 @@ const index = require('./routes/index');
 
 app.use(index.routes(), index.allowedMethods());
 
-app.listen(6000, function(){
-	console.log("server on 6000")
-});
+app.listen(3000);

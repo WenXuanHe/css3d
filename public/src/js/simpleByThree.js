@@ -125,6 +125,52 @@ class main {
         // 开启阴影
         this.renderer.shadowMap.enabled = true;
     }
+    setRect(){
+        //增加8个顶点
+        var vartices = [
+            new THREE.Vector3( 1, 3, 1 ),
+            new THREE.Vector3( 1, 3, -1 ),
+            new THREE.Vector3( 1, -1, 1 ),
+            new THREE.Vector3( 1, -1, -1 ),
+            new THREE.Vector3( -1, 3, -1 ),
+            new THREE.Vector3( -1, 3, 1 ),
+            new THREE.Vector3( -1, -1, -1 ),
+            new THREE.Vector3( -1, -1, 1 )
+        ];
+
+        // 增加6个面
+        var faces = [
+            THREE.Face3( 0, 2, 1),
+            THREE.Face3( 0, 2, 1),
+            THREE.Face3( 0, 2, 1),
+            THREE.Face3( 0, 2, 1),
+            THREE.Face3( 0, 2, 1),
+            THREE.Face3( 0, 2, 1)
+        ];
+
+        var geom = new THREE.Geometry();
+        geom.vartices = vartices;
+        geom.faces = faces;
+        geom.computeFaceNormals();
+
+        // 增加材质？
+        var materials = [
+            new THREE.MeshLambertMaterial( color, map, shading, wireframe ),
+            new THREE.MeshBasicMaterial( color, map, shading, wireframe ),
+        ];
+
+        var mesh = new THREE.SceneUtils.createMuitiMerialObject(geom, materials);
+        mesh.children().forEach(function(e){
+            e.castShadow = true;
+        });
+        scene.add(mesh);
+        renderer.render(scene, camera);
+        document.body.appendChild(renderer.domElement);
+
+
+
+
+    }
 
     createAI(){
 
