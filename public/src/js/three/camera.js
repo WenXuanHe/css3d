@@ -108,13 +108,13 @@ document.onkeydown = function (event) {
             break;
     }
     
-}
-
-function render() {
+}function render() {
     renderer.render(scene, camera);
 }
 render();
 
 document.getElementById('world').appendChild(renderer.domElement);
+
+
 
 
