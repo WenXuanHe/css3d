@@ -90,71 +90,52 @@
 	
 	scene.add(plane);
 	
-	var ambientLight = new THREE.AmbientLight(0x0c0c0c);
-	scene.add(ambientLight);
-	
-	var spotLight = new THREE.SpotLight(0xffffff);
-	spotLight.position.set(-40, 60, -10);
-	spotLight.castShadow = true;
-	scene.add(spotLight);
-	
 	var cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+	var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
+	var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+	cube.position.x = -20;
+	cube.position.y = 20;
+	cube.position.z = 20;
+	cube.receiveShadow = true;
+	scene.add(cube);
 	
-	for (var j = 0; j < planeGeometry.parameters.height / 5; j++) {
-	
-	    for (var i = 0; i < planeGeometry.parameters.width / 5; i++) {
-	        var rnf = Math.random() * 0.75 + 0.25;
-	        var cubeMaterial = new THREE.MeshLambertMaterial();
-	        cubeMaterial.color = new THREE.Color(rnf, 0, 0);
-	        var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-	
-	        cube.position.x = -(planeGeometry.parameters.width / 2) + 2 + i * 5;
-	        cube.position.y = 2;
-	        cube.position.z = -(planeGeometry.parameters.height / 2) + 2 + j * 5;
-	        scene.add(cube);
-	    }
-	}
-	
-	var control = new function () {
-	    this.perspective = 'perspective';
-	    this.switchCamera = function () {
-	        if (camera instanceof THREE.PerspectiveCamera) {
-	            camera = new THREE.OrthographicCamera(window.innerWidth / -16, window.innerWidth / 16, window.innerHeight / -16, window.innerHeight / 16, -200, 500);
-	            camera.position.x = -20;
-	            camera.position.y = 60;
-	            camera.position.z = 50;
-	            camera.lookAt(scene.position);
-	            this.perspective = "Orthographic";
-	        } else {
-	            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000);
-	            camera.position.x = -20;
-	            camera.position.y = 60;
-	            camera.position.z = 50;
-	            camera.lookAt(scene.position);
-	        }
-	
-	        render();
-	    };
-	}();
-	
-	setInterval(function () {
-	    control.switchCamera();
-	}, 2000);
+	var sphereGeometry = new THREE.SphereGeometry(4, 20, 30);
+	var sphereMaterial = new THREE.MeshLambertMaterial({ color: 0x7777ff });
+	var sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+	sphere.position.y = 4;
+	sphere.receiveShadow = true;
+	scene.add(sphere);
+	//点光源不会产生阴影，因为点光源向四面八方发射光线，计算阴影是一个十分沉重的负担
+	//创造点光源
+	var CreatePointLight = function CreatePointLight() {
+	    var pointLight = new THREE.PointLight(0xffffff);
+	    pointLight.position.set(-40, 60, 0);
+	    pointLight.castShadow = true;
+	    scene.add(pointLight);
+	};
+	// 创造聚光灯？
+	var spotLight = new THREE.SpotLight(0xffffff);
+	spotLight.position.set(-20, 40, 40);
+	spotLight.castShadow = true;
+	spotLight.target = sphere;
+	scene.add(spotLight);
+	var angleMath = 3;
 	
 	document.onkeydown = function (event) {
+	
 	    switch (event.keyCode) {
-	        case 37:
-	            camera.rotation.y += 0.02;
-	            render();
+	        case 38:
+	            angleMath += 1;
 	            break;
-	        case 39:
-	            camera.rotation.y -= 0.02;
-	            render();
+	        case 40:
+	            angleMath -= 1;
 	            break;
 	    }
 	};
 	
 	function render() {
+	    requestAnimationFrame(render);
+	    spotLight.angle = Math.PI / angleMath;
 	    renderer.render(scene, camera);
 	}
 	render();
