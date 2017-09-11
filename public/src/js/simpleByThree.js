@@ -345,7 +345,7 @@ class main {
         //设置点光源位置
         pointlight.position.set(0, 0, 500);
         // pointlight.castShadow = true;
-        this.setLightShadow(pointlight);
+    this.setLightShadow(pointlight);
         this.scene.add(pointlight);
         return [
             ambientLight, directionalLight, pointlight

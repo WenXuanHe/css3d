@@ -53,15 +53,6 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	// THREE.OrthographicCamera(left, right, top, bottom, near, far);
-	// left 左边界
-	// right 右边界
-	// top 上边界
-	// bottom 下边界
-	// near 近裁面
-	// lookAt 设置目标点
-	
-	// THREE.PerspectiveCamera(视野宽度=45，长宽比=window.innerWidth/window.innerHeight， near=0.1， far=1000)
 	var scene = new THREE.Scene();
 	var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 	
@@ -76,7 +67,7 @@
 	});
 	renderer.setClearColor(new THREE.Color(0xEEEEEE, 1.0));
 	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.shadowMapEnabled = true;
+	renderer.shadowMap.Enabled = true;
 	
 	var planeGeometry = new THREE.PlaneGeometry(70, 50, 1, 1);
 	var planeMaterial = new THREE.MeshLambertMaterial({
@@ -94,7 +85,7 @@
 	var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0xff0000 });
 	var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 	cube.position.x = -20;
-	cube.position.y = 20;
+	cube.position.y = 30;
 	cube.position.z = 20;
 	cube.receiveShadow = true;
 	scene.add(cube);
@@ -105,37 +96,37 @@
 	sphere.position.y = 4;
 	sphere.receiveShadow = true;
 	scene.add(sphere);
-	//点光源不会产生阴影，因为点光源向四面八方发射光线，计算阴影是一个十分沉重的负担
-	//创造点光源
-	var CreatePointLight = function CreatePointLight() {
-	    var pointLight = new THREE.PointLight(0xffffff);
-	    pointLight.position.set(-40, 60, 0);
-	    pointLight.castShadow = true;
-	    scene.add(pointLight);
-	};
-	// 创造聚光灯？
-	var spotLight = new THREE.SpotLight(0xffffff);
-	spotLight.position.set(-20, 40, 40);
-	spotLight.castShadow = true;
-	spotLight.target = sphere;
-	scene.add(spotLight);
-	var angleMath = 3;
+	
+	// 添加环境光
+	var ambient = new THREE.AmbientLight(0x1c1c1c);
+	scene.add(ambient);
+	
+	var target = new THREE.Object3D();
+	target.position.set(5, 0, 0);
+	var directionLight = new THREE.DirectionalLight(0xffffff);
+	directionLight.position.set(-20, 10, 2);
+	directionLight.castShadow = true;
+	directionLight.shadow.camera.far = 2010;
+	directionLight.shadow.camera.near = 3;
+	directionLight.shadow.mapSize.width = 3000;
+	directionLight.intensity = 0.5;
+	directionLight.target = target;
+	scene.add(directionLight);
 	
 	document.onkeydown = function (event) {
 	
 	    switch (event.keyCode) {
 	        case 38:
-	            angleMath += 1;
+	            directionLight.intensity += 0.1;
 	            break;
 	        case 40:
-	            angleMath -= 1;
+	            directionLight.intensity -= 0.1;
 	            break;
 	    }
 	};
 	
 	function render() {
 	    requestAnimationFrame(render);
-	    spotLight.angle = Math.PI / angleMath;
 	    renderer.render(scene, camera);
 	}
 	render();
