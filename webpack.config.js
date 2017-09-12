@@ -6,7 +6,7 @@ let publicPath = 'http://localhost:3000/dist/';
 
 module.exports = {
     entry: {
-        simpleByThree: path.resolve(__dirname, "public/src/js/three/material/mutl.js"),
+        simpleByThree: path.resolve(__dirname, "public/src/js/three/material/faxiang.js"),
         create: path.resolve(__dirname, "public/src/js/create.js")
     },
     output: {

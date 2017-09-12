@@ -53,49 +53,46 @@
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	var scene = new THREE.Scene();
+	var scene = new THREE.Scene(); /**
+	                                * 法向材质：材质的颜色取决于法向量，法向量改变，颜色也会改变 THREE.MeshNormalMaterial
+	                                */
 	
-	var camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 10, 130);
+	var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 	camera.position.x = -50;
 	camera.position.y = 60;
 	camera.position.z = 30;
 	camera.lookAt(scene.position);
 	
 	var renderer = new THREE.WebGLRenderer();
-	renderer.setClearColor(0x000000, 1.0);
+	renderer.setClearColor(0xffffff);
 	renderer.setSize(window.innerWidth, window.innerHeight);
-	console.log(1);
-	function addCube() {
-	    var cubeSize = Math.ceil(3 + Math.random() * 3);
-	    var geom = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-	    var material = new THREE.MeshDepthMaterial();
-	    var colorMaterial = new THREE.MeshBasicMaterial({
-	        color: 0x00ff00,
-	        transparent: true,
-	        blending: THREE.MultiplyBlending });
 	
-	    var cube = new THREE.SceneUtils.createMultiMaterialObject(geom, [material, colorMaterial]);
-	    cube.castShadow = true;
-	    cube.children[0].scale.set(.99, .99, .99);
-	    cube.position.set(-60 + Math.round(Math.random() * 100), Math.round(Math.random() * 10), -100 + Math.round(Math.random() * 150));
-	    scene.add(cube);
-	}
+	var groupGeom = new THREE.PlaneGeometry(100, 100);
+	var groupMaterial = new THREE.MeshBasicMaterial({ color: 0xcccccc });
+	var group = new THREE.Mesh(groupGeom, groupMaterial);
+	group.rotation.x = -.5 * Math.PI;
+	scene.add(group);
 	
-	for (var i = 0; i < 100; i++) {
-	    addCube();
-	}
+	var cubeGeometry = new THREE.BoxGeometry(20, 20, 20);
+	var cubeMaterial = new THREE.MeshNormalMaterial({ color: 0x00ff00 });
+	var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+	cube.position.set(-10, 3, 8);
+	scene.add(cube);
 	
+	var cubeTowGeometry = new THREE.BoxGeometry(20, 20, 20);
+	var cubeTwoMaterial = new THREE.MeshLambertMaterial({ color: 0x7777ff });
+	var cubeTwo = new THREE.Mesh(cubeTowGeometry, cubeTwoMaterial);
+	cubeTwo.position.set(20, 0, 30);
+	scene.add(cubeTwo);
+	
+	var ambient = new THREE.AmbientLight(0x0c0c0c);
+	ambient.position.set(20, 50, 100);
+	
+	scene.add(ambient);
 	function render() {
 	    requestAnimationFrame(render);
-	
-	    scene.traverse(function (e) {
-	        if (e instanceof THREE.Mesh) {
-	            e.rotation.y += .02;
-	            e.rotation.x += .02;
-	            e.rotation.z += .02;
-	        }
-	    });
 	    renderer.render(scene, camera);
+	    cube.rotation.y += 0.01;
 	}
 	render();
 	
