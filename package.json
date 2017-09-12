@@ -15,6 +15,7 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "systemjs": "^0.20.14",
+
     "url-loader": "^0.5.9",
     "webpack": "^1.13.1"
   },
@@ -29,7 +30,7 @@
     "koa-router": "^7.2.1",
     "koa-static": "^4.0.1",
     "koa-views": "^6.0.2",
-    "three": "^0.86.0",
+    "three": "^0.66.0",
     "three-trackballcontrols": "^0.0.5"
   }
 }
