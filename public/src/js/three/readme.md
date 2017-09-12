@@ -8,3 +8,11 @@
 * THREE.MeshBasicMaterial *
 -wireframe  boolean    显示线宽
 -fog  boolean   显示雾化效果
+
+
+### 深度材质 MeshDepthMetarial
+*** 特性： ***
+1.外观不由光照和材质决定
+2.外观由物体到相机的距离决定
+3.可以与其他材质组合使用
+
